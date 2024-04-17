@@ -1,0 +1,553 @@
+openapi: 3.0.3
+info:
+  title: Sprowt Internal APIs - Version 1.0
+  
+  contact:
+    email: arunnasarain@gmail.com
+    name: Arun Nasarain
+  termsOfService: http://swagger.io/terms/
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+servers:
+  - url: https://localhost:3000/
+  - url: https://sprowt-qa/
+  - url: https://sprowt-prod/
+
+tags:
+  - name: Courses
+    description: Add new courses, Manage course materials.
+  - name: Students
+    description: Register for courses
+  - name: Coaches
+    description: Track their courses
+
+paths:
+# Courses
+  /api/course/{course_id}:
+    get:
+      tags: 
+        - Courses
+      summary: Get course details by id
+      description: Use this API to fetch details of a course
+      parameters:
+        - name: course_id
+          required: true
+          in: path
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: course created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/courses"
+    put:
+      tags:
+        - Courses
+      summary: Update an existing course
+      description: Update an existing course by its course_id
+      operationId: updateCourse
+      parameters:
+        - name: course_id
+          required: true
+          in: path
+          schema:
+            type: integer
+      requestBody:
+        description: Update an existent course in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/courses'            
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/courses'          
+        '400':
+          description: Invalid data
+        '404':
+          description: Course not found
+    delete:
+      tags:
+        - Courses
+      summary: Deletes a Course
+      description: delete a Course
+      operationId: deleteCourse
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: course_id
+          in: path
+          description: Pet id to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid pet value   
+  /api/course:
+    get:
+      tags: 
+        - Courses
+      summary: Get all courses
+      description: Use this API to fetch details of a course
+      responses:
+        "200":
+          description: course created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/courses"
+    post:
+      tags:
+        - Courses
+      summary: Add a new course to the store
+      description: Add a new course to the store
+      operationId: addcourse
+      requestBody:
+        description: Create a new course in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/courses'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/courses'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/courses'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/courses'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/courses'
+  /api/course/search:
+    get:
+      tags: 
+        - Courses
+      summary: Search courses
+      description: Use this API to fetch details of a course
+      responses:
+        "200":
+          description: course found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/courses"
+  /api/course/filter:
+    get:
+      tags: 
+        - Courses
+      summary: Filter courses by category
+      description: Use this API to fetch details of a course
+      responses:
+        "200":
+          description: course found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/courses"
+
+# Students
+  /api/student/{studentId}/courses:
+    get:
+      tags:
+        - Students
+      summary: Retrieve all enrolled courses of a student.
+      description: Fetch all enrolled courses of a student.
+      operationId: studentEnrollment
+      parameters:
+        - name: studentId
+          required: true
+          in: path
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/courses'
+    put:
+      tags:
+        - Students
+      summary: Add a new course to the student.
+      description: Add a new course.
+      operationId: updateEnrollment
+      requestBody:
+        description: Create a new course
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/courses'
+        required: true
+      responses:
+        '200':
+          description: Successful 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/courses'  
+    delete:
+      tags:
+        - Students
+      summary: Add a new course to the student.
+      description: Add a new course.
+      operationId: deleteEnrollment
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/courses'   
+  /api/student/enrollments:
+    post:
+      tags:
+        - Students
+      summary: Add a new course to the student.
+      description: Add a new course.
+      operationId: enrollStudent
+      requestBody:
+        description: Create a new course
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/courses'
+        required: true
+      responses:
+        '200':
+          description: Successful 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/courses'    
+  /api/student/payment:
+    post:
+      tags:
+        - Students
+      summary: Add a new course to the student.
+      description: Add a new course.
+      operationId: paymentInitialion
+      requestBody:
+        description: Create a new course
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: Successful 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/courses' 
+  /api/student/signup:
+    post:
+      tags:
+        - Students
+      summary: Add a new course to the store
+      description: Add a new course to the store
+      operationId: studentSignup
+      requestBody:
+        description: Create a new course in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/students'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/students'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/students'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/students'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/students'      
+  /api/student/login:
+    post:
+      tags:
+        - Students
+      summary: Add a new course to the store
+      description: Add a new course to the store
+      operationId: studentLogin
+      requestBody:
+        description: Create a new course in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/students'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/students'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/students'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/students'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/students'      
+  /api/student/logout:
+    post:
+      tags:
+        - Students
+      summary: Add a new course to the store
+      description: Add a new course to the store
+      operationId: studentLogout
+      requestBody:
+        description: Create a new course in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/students'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/students'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/students'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/students'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/students'      
+# Coaches
+  /api/instructors/{coachId}/students:
+    get:
+      tags:
+        - Coaches
+      summary: Retrieve all enrolled courses of a student.
+      description: Fetch all enrolled courses of a student.
+      operationId: getStudents
+      parameters:
+        - name: coachId
+          required: true
+          in: path
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/courses'
+  /api/coach/{coachId}/courses:
+    get:
+      tags:
+        - Coaches
+      summary: Retrieve all enrolled courses of a student.
+      description: Fetch all enrolled courses of a student.
+      operationId: getCourses
+      parameters:
+        - name: coachId
+          required: true
+          in: path
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/courses'
+    put:
+      tags:
+        - Coaches
+      summary: Add a new course to the student.
+      description: Add a new course.
+      operationId: updateCourses
+      requestBody:
+        description: Create a new course
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/courses'
+        required: true
+      responses:
+        '200':
+          description: Successful 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/courses'  
+    delete:
+      tags:
+        - Coaches
+      summary: Add a new course to the student.
+      description: Add a new course.
+      operationId: deleteCourses
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/courses'   
+  /api/coach/signup:
+    post:
+      tags:
+        - Coaches
+      summary: Add a new course to the store
+      description: Add a new course to the store
+      operationId: coachSignup
+      requestBody:
+        description: Create a new course in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/coaches'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/coaches'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/coaches'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/coaches'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/coaches'      
+  /api/coach/login:
+    post:
+      tags:
+        - Coaches
+      summary: Add a new course to the store
+      description: Add a new course to the store
+      operationId: coachLogin
+      requestBody:
+        description: Create a new course in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/coaches'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/coaches'               
+  /api/coach/logout:
+    post:
+      tags:
+        - Coaches
+      summary: Add a new course to the store
+      description: Add a new course to the store
+      operationId: coachLogout
+      requestBody:
+        description: Create a new course in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/students'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/students'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/students'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/students'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/students'     
+# Components
+components:
+  schemas:
+    courses:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        id:
+          type: integer
+    students:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        id:
+          type: integer
+    coaches:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        id:
+          type: integer
